@@ -173,16 +173,19 @@ function getTypeOfCloudy(percent) {
 
 function addNewCity() {
 	const formData = new FormData(addNewCityForm);
-	const cityName = formData.get('newCityName').toString();
+	const cityName = formData.get('newCityName').toString().toLowerCase();
+	if (cityName === ''){
+		return;
+	}
 	addNewCityForm.reset();
 	if (localStorage.hasOwnProperty(cityName)) {
+		alert("City is already added");
 		return;
 	}
 	const newCity = newCityLoaderInfo();
 	request(['q=' + cityName]).then((jsonResult) => {
 		if (jsonResult && !localStorage.hasOwnProperty(jsonResult.name)) {
-			localStorage.setItem(jsonResult.name, '');
-			//alert(localStorage.length.toString())
+			localStorage.setItem(jsonResult.name.toLowerCase(), '');
 			addCity(jsonResult, newCity);
 		} else {
 			newCity.remove();
